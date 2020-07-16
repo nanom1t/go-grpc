@@ -9,5 +9,5 @@ go get -u github.com/golang/protobuf/{proto,protoc-gen-go}
 
 2. Compile protobuf files:
 ```
-protoc -I reverser/ reverser/reverser.proto --go_out=plugins=grpc:reverser
+protoc -I location/ location/location.proto --go_out=plugins=grpc:location
 ```
