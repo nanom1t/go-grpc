@@ -6,9 +6,6 @@ service Location {
     rpc Distance(DistanceRequest) returns (DistanceResponse) {}
 }
 
-// Points are represented as latitude-longitude pairs in the E7 representation
-// Latitudes should be in the range +/- 90 degrees and longitude should be in
-// the range +/- 180 degrees (inclusive).
 message Point {
     double latitude = 1;
     double longitude = 2;
