@@ -8,6 +8,12 @@ import (
 	"fmt"
 )
 
+type City struct {
+	name string
+	latitude float64
+	longitude float64
+}
+
 func main() {
 	// create grpc connection
 	connection, err := grpc.Dial(":3000", grpc.WithInsecure())
@@ -19,16 +25,25 @@ func main() {
 	// create grpc client
 	client := location.NewLocationClient(connection)
 
-	// send request
-	request := location.DistanceRequest{
-		Point1: &location.Point{Latitude: 50.450001, Longitude: 30.523333}, // Kiev
-		Point2: &location.Point{Latitude: 49.842957, Longitude: 24.031111}, // Lviv
+	cities := []City{
+		{"Lviv", 49.842957, 24.031111},
+		{"Kiev", 50.450001, 30.523333},
 	}
 
-	response, err := client.Distance(context.Background(), &request)
-	if err != nil {
-		log.Fatalf("GRPC request error: %s", err)
-	}
+	position := &location.Point{Latitude: 48.5522, Longitude: 24.4238} // IF
 
-	fmt.Println("GRPC response:", response.Distance)
+	// send requests
+	for _, city := range cities {
+		request := location.DistanceRequest{
+			Point1: position,
+			Point2: &location.Point{Latitude: city.latitude, Longitude: city.longitude},
+		}
+
+		response, err := client.Distance(context.Background(), &request)
+		if err != nil {
+			log.Fatalf("GRPC request error: %s", err)
+		}
+
+		fmt.Printf("Distance to %s: %f\n", city.name, response.Distance)
+	}
 }
